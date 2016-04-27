@@ -1,33 +1,51 @@
 var express     = require("express"),
     app         = express(),
     bodyParser  = require("body-parser"),
-    mongoose    = require("mongoose")
-
+    mongoose    = require("mongoose");
+    
+mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({extended: true}));
-
 app.set("view engine", "ejs");
 
-var campgrounds = [
-    {name: "Duck Creek", image: "https://pixabay.com/static/uploads/photo/2016/01/26/23/32/camp-1163419_960_720.jpg"},
-    {name: "Mountain Face", image: "https://pixabay.com/static/uploads/photo/2015/08/04/11/02/caravans-874549_960_720.jpg"},
-    {name: "Bacon Crown", image: "https://pixabay.com/static/uploads/photo/2015/05/23/00/25/utah-780108_960_720.jpg"},
-    {name: "Duck Creek", image: "https://pixabay.com/static/uploads/photo/2016/01/26/23/32/camp-1163419_960_720.jpg"},
-    {name: "Mountain Face", image: "https://pixabay.com/static/uploads/photo/2015/08/04/11/02/caravans-874549_960_720.jpg"},
-    {name: "Bacon Crown", image: "https://pixabay.com/static/uploads/photo/2015/05/23/00/25/utah-780108_960_720.jpg"},
-    {name: "Duck Creek", image: "https://pixabay.com/static/uploads/photo/2016/01/26/23/32/camp-1163419_960_720.jpg"},
-    {name: "Mountain Face", image: "https://pixabay.com/static/uploads/photo/2015/08/04/11/02/caravans-874549_960_720.jpg"},
-    {name: "Bacon Crown", image: "https://pixabay.com/static/uploads/photo/2015/05/23/00/25/utah-780108_960_720.jpg"},
-    {name: "Duck Creek", image: "https://pixabay.com/static/uploads/photo/2016/01/26/23/32/camp-1163419_960_720.jpg"},
-    {name: "Mountain Face", image: "https://pixabay.com/static/uploads/photo/2015/08/04/11/02/caravans-874549_960_720.jpg"},
-    {name: "Bacon Crown", image: "https://pixabay.com/static/uploads/photo/2015/05/23/00/25/utah-780108_960_720.jpg"}
-];
+//SCHEMA SETUP
+var campgroundSchema = new mongoose.Schema({
+    name: String,
+    image: String
+});
+
+var Campground = mongoose.model("Campground", campgroundSchema);
+
+/*Campground.create(
+    {
+        name: "Mountain Face", 
+        image: "https://pixabay.com/static/uploads/photo/2015/08/04/11/02/caravans-874549_960_720.jpg"
+        
+    }, 
+    function(err, campground) {
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log("NEWLY CREATED CAMPGROUND:");
+            console.log(campground);
+        } 
+});*/
+
 
 app.get("/", function(req, res) {
    res.render("landing"); 
 });
 
 app.get("/campgrounds", function(req, res) {
-    res.render("campgrounds", {campgrounds: campgrounds});
+    //GET ALL CAMPGROUNDS FROM DB
+    Campground.find({}, function(err, allCampgrounds) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.render("campgrounds", {campgrounds: allCampgrounds});
+        }
+    });
 });
 
 app.post("/campgrounds", function(req, res) {
@@ -35,11 +53,16 @@ app.post("/campgrounds", function(req, res) {
     var name = req.body.name;
     var image = req.body.image;
     var newCampGround = {name: name, image: image};
-    campgrounds.push(newCampGround);
- 
-   //redirect back go campgrounds page
-   res.redirect("/campgrounds");
-   
+    // CREATE A NEW CAMPGROUND AND SAVE TO DB
+    Campground.create(newCampGround, function(err, newlyCreated) {
+        if(err){
+            console.log(err);
+        }
+        else{
+            //redirect back to campgrounds page
+            res.redirect("/campgrounds");
+        }
+    });
 });
 
 app.get("/campgrounds/new", function(req, res) {
