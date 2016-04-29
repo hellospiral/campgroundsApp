@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var Campground = require("./models/campground");
+var Comment = require("./models/comment");
 
 var data = [
         {
@@ -26,6 +27,7 @@ function seedDb() {
             console.log(err);
         }
         console.log("removed campgrounds!");
+        // add a few campgrounds
         data.forEach(function(seed){
             Campground.create(seed, function(err, campground){
                 if(err){
@@ -33,6 +35,7 @@ function seedDb() {
                 } 
                 else{
                     console.log("added a campround!");
+                    // add a few comments
                     Comment.create(
                         {
                             text: "I had a really weird time here actually",
@@ -52,10 +55,6 @@ function seedDb() {
             });
         });
     });
-    // add a few campgrounds
-
-    
-    // add a few comments
 }
 
 module.exports = seedDb;

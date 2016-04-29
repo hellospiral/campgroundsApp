@@ -12,24 +12,6 @@ app.set("view engine", "ejs");
 
 
 
-/*Campground.create(
-    {
-        name: "Mountian Face", 
-        image: "https://pixabay.com/static/uploads/photo/2015/08/04/11/02/caravans-874549_960_720.jpg",
-        description: "This campsite sits on the very edge of the face of a giant mountain."
-        
-    }, 
-    function(err, campground) {
-        if(err){
-            console.log(err);
-        }
-        else{
-            console.log("NEWLY CREATED CAMPGROUND:");
-            console.log(campground);
-        } 
-});*/
-
-
 app.get("/", function(req, res) {
    res.render("landing"); 
 });
