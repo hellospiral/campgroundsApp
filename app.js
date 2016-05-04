@@ -6,14 +6,28 @@ var express     = require("express"),
     LocalStrategy = require("passport-local"),
     Campground  = require("./models/campground"),
     Comment     = require("./models/comment"),
-    user        = require("./models/user"),
-    seedDb      = require("./seeds")
+    User        = require("./models/user"),
+    seedDb      = require("./seeds");
     
 seedDb();
 mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
+
+
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+    secret: "Robert is the cutest cat",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 
 
