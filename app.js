@@ -28,7 +28,10 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
+app.use(function(req, res, next) {
+    res.locals.currentUser = req.user;
+    next();
+})
 
 
 app.get("/", function(req, res) {
@@ -37,7 +40,7 @@ app.get("/", function(req, res) {
 
 //INDEX - show all campgrounds
 app.get("/campgrounds", function(req, res) {
-    //GET ALL CAMPGROUNDS FROM DB
+    //get all campgrounds from db
     Campground.find({}, function(err, allCampgrounds) {
         if (err) {
             console.log(err);
