@@ -16,6 +16,9 @@ router.get("/register", function(req, res) {
 // handle sign up logic
 router.post("/register", function(req, res) {
     var newUser = new User({username: req.body.username});
+    if(req.body.adminCode === 'p9912sloJso') {
+        newUser.isAdmin = true;
+    }
     User.register(newUser, req.body.password, function(err, user) {
         if(err){
             req.flash("error", err.message);
@@ -25,7 +28,7 @@ router.post("/register", function(req, res) {
             req.flash("success", "Welcome to YelpCamp " + user.username);
             res.redirect("/campgrounds");
         });
-    });
+    })
 });
 
 // show login form
