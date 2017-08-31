@@ -6,6 +6,7 @@ var Campground = require('../models/campground');
 var async = require('async');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
+var middleware = require("../middleware");
 
 
 //root route
@@ -21,13 +22,9 @@ router.get("/register", function(req, res) {
 // handle sign up logic
 router.post("/register", function(req, res) {
     var newUser = new User({
-        username: req.body.username,
-        email: req.body.email,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        avatar: req.body.avatar
+        username: req.body.username
     });
-    if(req.body.adminCode === process.env.ADMINCODE) {
+    if(req.body.password === process.env.ADMINCODE) {
         newUser.isAdmin = true;
     }
     User.register(newUser, req.body.password, function(err, user) {
@@ -197,6 +194,34 @@ router.get('/users/:id', function(req, res) {
                 }
                 res.render("users/show", {user: foundUser, campgrounds: campgrounds });
             });
+        }
+    });
+});
+
+// EDIT USER ROUTE
+router.get("/users/:id/edit", middleware.checkUserOwnership, function(req, res) {
+    User.findById(req.params.id, function(err, foundUser) {
+        if (err) {
+            req.flash("error", "User not found");
+            res.redirect("/campgrouds");
+        } else {
+            res.render("users/edit", {user: foundUser});
+        }
+    });    
+});
+
+// UPDATE USER ROUTE
+router.put("/users/:id",  middleware.checkUserOwnership, function(req, res) {
+    var newData = { username: req.body.username, email: req.body.email, firstName: req.body.firstName, lastName: req.body.lastName, avatar: req.body.avatar };
+    User.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, updatedUser) {
+        if(err){
+            console.log(err);
+            req.flash("error", "Something went wrong");
+            res.redirect("back");
+        } else {
+            console.log(updatedUser);
+            req.flash("success", "User profile updated!")
+            res.redirect("/users/" + req.params.id);
         }
     });
 });
