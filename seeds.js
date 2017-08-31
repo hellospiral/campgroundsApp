@@ -1,7 +1,9 @@
 var mongoose = require("mongoose");
 var Campground = require("./models/campground");
 var Comment = require("./models/comment");
+var User = require('./models/user');
 var geocoder = require('geocoder');
+
 
 var data = [
         {
@@ -29,29 +31,39 @@ var data = [
 
 function seedDb() {
     // Remove all campgrounds
-    Campground.remove(function(err) {
-        if(err){
+    User.remove(function(err) {
+        if(err) {
             console.log(err);
         }
-        console.log("removed campgrounds!");
-        // add a few campgrounds
-        data.forEach(function(seed){
-            geocoder.geocode(seed.location, function(err, data) {
-                var lat = data.results[0].geometry.location.lat;
-                var lng = data.results[0].geometry.location.lng;
-                var location = data.results[0].formatted_address;
-                var newCampground = {name: seed.name, image: seed.image, description: seed.description, location: location, lat: lat, lng: lng, price: seed.price};
-                Campground.create(newCampground, function(err, campground){
-                    if(err){
-                        console.log(err);
-                    } 
-                    else{
-                        console.log("added a campround!");
-                    }
-                });
-            });
-        });
     });
+    Campground.remove(function(err) {
+        if(err) {
+            console.log(err);
+        }
+    });
+    // Campground.remove(function(err) {
+    //     if(err){
+    //         console.log(err);
+    //     }
+    //     console.log("removed campgrounds!");
+    //     // add a few campgrounds
+    //     data.forEach(function(seed){
+    //         geocoder.geocode(seed.location, function(err, data) {
+    //             var lat = data.results[0].geometry.location.lat;
+    //             var lng = data.results[0].geometry.location.lng;
+    //             var location = data.results[0].formatted_address;
+    //             var newCampground = {name: seed.name, image: seed.image, description: seed.description, location: location, lat: lat, lng: lng, price: seed.price};
+    //             Campground.create(newCampground, function(err, campground){
+    //                 if(err){
+    //                     console.log(err);
+    //                 } 
+    //                 else{
+    //                     console.log("added a campround!");
+    //                 }
+    //             });
+    //         });
+    //     });
+    // });
 }
 
 module.exports = seedDb;
