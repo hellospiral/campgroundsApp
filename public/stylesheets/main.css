@@ -47,3 +47,10 @@ body {
   display:flex;
   flex-wrap: wrap;
 }
+
+.card {
+  overflow: hidden;
+  box-shadow: 0 12px 15px 0 rgba(0,0,0,0.16), 0 12px 20px 0 rgba(0,0,0,0.12);
+  position: relative;
+  display: block;
+}
