@@ -19,7 +19,7 @@ var commentRoutes    = require("./routes/comments"),
     campgroundRoutes = require("./routes/campgrounds"),
     indexRoutes      = require("./routes/index");
     
-// seedDb(); //seed the database
+//seedDb(); //seed the database
 var url = process.env.DATABASEURL || "mongodb://localhost/yelp_camp_v2";
 
 mongoose.connect(url);
