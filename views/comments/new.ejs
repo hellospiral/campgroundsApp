@@ -4,9 +4,9 @@
 <div class="row">
     <h1 style="text-align: center;">Add new comment to <%= campground.name %> </h1>
     <div style="width: 30%; margin: 30px auto;">
-        <form action="/campgrounds/<%=campground._id%>/comments" method="POST">
+        <form action="/campgrounds/<%=campground._id%>/comments" method="POST" id="commentForm">
             <div class="form-group">
-                <input class="form-control" type = "text" name="comment[text]" placeholder="text">
+                <textarea class="form-control" id="commentForm" name="comment[text]" placeholder="text" form="commentForm" rows="3"></textarea>
             </div>
             <div class="form-group">
                 <button class="btn btn-large btn-primary btn-block">Submit</button>
