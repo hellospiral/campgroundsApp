@@ -21,7 +21,7 @@
         <h2>Campgrounds:</h2>
         <ul>
            <% campgrounds.forEach(function(campground) { %>
-               <li class="list-group-item"><a href="campgrounds/<%= campground.id %>"><%= campground.name %></a></li>
+               <li class="list-group-item"><a href="/campgrounds/<%= campground.id %>"><%= campground.name %></a></li>
            <% }); %>
        </ul>
     </div>
